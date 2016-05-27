@@ -196,6 +196,20 @@
             <field name="function">export_inventory_from_cron</field>
         </record>
 
+        <!-- Cron to Export Order Status-->
+        <record model="ir.cron" id="cron_export_orders">
+            <field name="name">Export Orders Status</field>
+            <field name="request_user" ref="res.user_admin"/>
+            <field name="user" ref="user_trigger_orders"/>
+            <field name="active" eval="False"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="number_calls">-1</field>
+            <field name="repeat_missed" eval="False"/>
+            <field name="model">sale.channel</field>
+            <field name="function">export_order_status_using_cron</field>
+        </record>
+
         <!-- sale tax -->
         <record model="ir.ui.view" id="sale_tax_view_form">
             <field name="model">sale.channel.tax</field>
