@@ -367,6 +367,17 @@ class SaleChannel(ModelSQL, ModelView):
                     # Silently pass if method is not implemented
                     pass
 
+    @classmethod
+    def export_order_status_using_cron(cls):
+        """
+        Export sales orders status to external channel using cron
+        """
+        for channel in cls.search([]):
+            try:
+                channel.export_order_status()
+            except NotImplementedError:
+                pass
+
     def get_listings_to_export_inventory(self):
         """
         This method returns listing, which needs inventory update
