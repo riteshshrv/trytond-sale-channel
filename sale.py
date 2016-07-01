@@ -360,6 +360,8 @@ class Sale:
             # XXX: mark past orders as completed
             self.state = 'done'
             self.save()
+            # Update cached values
+            Sale.store_cache([self])
 
 
 class SaleLine:
