@@ -22,7 +22,8 @@ from trytond.pyson import Eval, Bool
 __metaclass__ = PoolMeta
 __all__ = [
     'ProductSaleChannelListing', 'Product', 'AddProductListing',
-    'AddProductListingStart',
+    'AddProductListingStart', 'TemplateSaleChannelListing',
+    'Template'
 ]
 
 
@@ -83,6 +84,51 @@ class AddProductListing(Wizard):
 
     def transition_next(self):
         return 'start_%s' % self.start.channel.source
+
+
+class Template:
+    "Product Template"
+    __name__ = 'product.template'
+
+    channel_listings = fields.One2Many(
+        'product.template.channel_listing', 'template', 'Channel Listings'
+    )
+
+
+class TemplateSaleChannelListing(ModelSQL, ModelView):
+    """
+    Template - Sale Channel
+    This model keeps a record of a template's association with Sale Channels.
+    """
+    __name__ = 'product.template.channel_listing'
+
+    channel = fields.Many2One(
+        'sale.channel', 'Sale Channel',
+        domain=[('source', '!=', 'manual')],
+        select=True, required=True,
+        ondelete='RESTRICT'
+    )
+    template = fields.Many2One(
+        'product.template', 'Product Template', required=True,
+        select=True, ondelete='CASCADE'
+    )
+    template_identifier = fields.Char(
+        'Template Identifier', select=True, required=True
+    )
+
+    @classmethod
+    def __setup__(cls):
+        """
+        Setup the class and define constraints
+        """
+        super(TemplateSaleChannelListing, cls).__setup__()
+        cls._sql_constraints += [
+            (
+                'channel_template_unique',
+                'UNIQUE(channel, template_identifier, template)',
+                'Product Template is already mapped to this channel with same identifier'  # noqa
+            )
+        ]
 
 
 class Product:

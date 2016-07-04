@@ -16,7 +16,7 @@ from wizard import (
 )
 from product import (
     ProductSaleChannelListing, Product, AddProductListing,
-    AddProductListingStart
+    AddProductListingStart, Template, TemplateSaleChannelListing
 )
 from carrier import SaleChannelCarrier
 from sale import Sale, SaleLine
@@ -37,6 +37,8 @@ def register():
         SaleLine,
         ProductSaleChannelListing,
         Product,
+        Template,
+        TemplateSaleChannelListing,
         ImportDataWizardStart,
         ImportDataWizardSuccess,
         ImportDataWizardProperties,

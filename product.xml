@@ -26,5 +26,17 @@
             <field name="wiz_name">product.listing.add</field>
             <field name="model">product.product</field>
         </record>
+
+        <!-- Template Listing -->
+        <record model="ir.ui.view" id="template_view_form">
+            <field name="model">product.template</field>
+            <field name="inherit" ref="product.template_view_form"/>
+            <field name="name">template_form</field>
+        </record>
+        <record model="ir.ui.view" id="template_sale_channel_listing_tree">
+            <field name="model">product.template.channel_listing</field>
+            <field name="type">tree</field>
+            <field name="name">template_channel_listing_tree</field>
+        </record>
     </data>
 </tryton>
