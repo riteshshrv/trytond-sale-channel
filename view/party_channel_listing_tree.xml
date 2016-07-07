@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tree string="Product Channel Listings">
+    <field name="party" />
+    <field name="channel" />
+    <field name="contact_identifier" />
+</tree>

@@ -18,6 +18,7 @@ from product import (
     ProductSaleChannelListing, Product, AddProductListing,
     AddProductListingStart, Template, TemplateSaleChannelListing
 )
+from party import Party, PartySaleChannelListing
 from carrier import SaleChannelCarrier
 from sale import Sale, SaleLine
 from user import User
@@ -32,6 +33,8 @@ def register():
         ChannelException,
         ChannelOrderState,
         SaleChannelCarrier,
+        Party,
+        PartySaleChannelListing,
         User,
         Sale,
         SaleLine,

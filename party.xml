@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+        <!-- Contact Listing -->
+        <record model="ir.ui.view" id="party_view_form">
+            <field name="model">party.party</field>
+            <field name="inherit" ref="party.party_view_form"/>
+            <field name="name">party_form</field>
+        </record>
+        <record model="ir.ui.view" id="party_sale_channel_listing_tree">
+            <field name="model">party.party.channel_listing</field>
+            <field name="type">tree</field>
+            <field name="name">party_channel_listing_tree</field>
+        </record>
+    </data>
+</tryton>
