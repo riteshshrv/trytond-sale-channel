@@ -16,6 +16,7 @@ Implementing Add listing wizard for downstream modules:
 from trytond.pool import PoolMeta, Pool
 from trytond.wizard import Wizard, Button, StateTransition, StateView
 from trytond.transaction import Transaction
+from trytond import backend
 from trytond.model import ModelView, fields, ModelSQL
 from trytond.pyson import Eval, Bool
 
@@ -178,8 +179,9 @@ class ProductSaleChannelListing(ModelSQL, ModelView):
         ondelete='RESTRICT'
     )
     product = fields.Many2One(
-        'product.product', 'Product', required=True, select=True,
-        ondelete='CASCADE'
+        'product.product', 'Product', select=True,
+        states={'required': Eval('state') == 'active'},
+        ondelete='CASCADE', depends=['state']
     )
     product_identifier = fields.Char(
         "Product Identifier", select=True, required=True
@@ -218,6 +220,17 @@ class ProductSaleChannelListing(ModelSQL, ModelView):
         }, depends=['availability_type_used']),
         'get_availability_fields'
     )
+
+    @classmethod
+    def __register__(cls, module_name):
+        super(ProductSaleChannelListing, cls).__register__(module_name)
+
+        TableHandler = backend.get('TableHandler')
+        cursor = Transaction().cursor
+        table = TableHandler(cursor, cls, module_name)
+
+        # Remove not null constraint from 'product'
+        table.not_null_action('product', action='remove')
 
     def get_unit_digits(self, name):
         if self.product:
