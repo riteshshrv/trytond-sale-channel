@@ -13,6 +13,8 @@ Implementing Add listing wizard for downstream modules:
   views or transitions. Eventually it should end with the `end` state.
 
 """
+from collections import defaultdict
+
 from trytond.pool import PoolMeta, Pool
 from trytond.wizard import Wizard, Button, StateTransition, StateView
 from trytond.transaction import Transaction
@@ -239,18 +241,22 @@ class ProductSaleChannelListing(ModelSQL, ModelView):
 
     @classmethod
     def get_availability_fields(cls, listings, names):
-        values = {
-            'availability_type_used': {},
-            'availability_used': {},
-            'quantity': {}
-        }
+        listing_ids = map(int, listings)
+        values = defaultdict(lambda: dict.fromkeys(listing_ids, None))
+        for name in names:
+            # Just call the default dict once so all fields have values
+            # even if product is absent
+            values[name]
+
         for listing in listings:
-            availability = listing.get_availability()
-            values['availability_type_used'][listing.id] = availability['type']
-            values['availability_used'][listing.id] = availability.get(
-                'value'
-            )
-            values['quantity'][listing.id] = availability.get('quantity')
+            if listing.product:
+                availability = listing.get_availability()
+                values['availability_type_used'][listing.id] = \
+                    availability['type']
+                values['availability_used'][listing.id] = availability.get(
+                    'value'
+                )
+                values['quantity'][listing.id] = availability.get('quantity')
         return values
 
     @fields.depends('channel')
@@ -336,11 +342,12 @@ class ProductSaleChannelListing(ModelSQL, ModelView):
         Product = Pool().get('product.product')
 
         with Transaction().set_context(**self.get_availability_context()):
-            rv = {'type': 'bucket'}
-            product = Product(self.product.id)
-            rv['quantity'] = product.quantity
-            if rv['quantity'] > 0:
-                rv['value'] = 'in_stock'
-            else:
-                rv['value'] = 'out_of_stock'
+            rv = {'type': 'bucket', 'value': None, 'quantity': None}
+            if self.product:
+                product = Product(self.product.id)
+                rv['quantity'] = product.quantity
+                if rv['quantity'] > 0:
+                    rv['value'] = 'in_stock'
+                else:
+                    rv['value'] = 'out_of_stock'
             return rv
