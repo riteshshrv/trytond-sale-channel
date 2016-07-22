@@ -28,6 +28,16 @@
             <field name="model">sale.channel,-1</field>
             <field name="action" ref="act_sale_channel_listing"/>
         </record>
+        <record model="ir.action.act_window.view" id="act_sale_channel_listing_view_1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="product_sale_channel_listing_tree"/>
+            <field name="act_window" ref="act_sale_channel_listing"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_sale_channel_listing_view_2">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="product_sale_channel_listing_form"/>
+            <field name="act_window" ref="act_sale_channel_listing"/>
+        </record>
 
         <!-- Domai Tabs -->
         <record model="ir.action.act_window.domain" id="act_sale_channel_listing_domain_active">
