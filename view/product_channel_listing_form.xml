@@ -2,8 +2,11 @@
 <form string="Product Channel Listing" col="4">
     <label name="channel"/>
     <field name="channel"/>
+    <newline/>
     <label name="product_identifier"/>
     <field name="product_identifier"/>
+    <label name="product"/>
+    <field name="product"/>
     <notebook colspan="4">
     </notebook>
     <group colspan="4" id="button_state">

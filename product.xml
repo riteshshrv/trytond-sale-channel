@@ -16,6 +16,38 @@
             <field name="type">form</field>
             <field name="name">product_channel_listing_form</field>
         </record>
+
+        <!-- Relate from Channel to Product Listing -->
+        <record model="ir.action.act_window" id="act_sale_channel_listing">
+            <field name="name">Channel Listing</field>
+            <field name="res_model">product.product.channel_listing</field>
+            <field name="domain">[('channel', '=', Eval('active_id'))]</field>
+        </record>
+         <record model="ir.action.keyword" id="act_sale_channel_listing_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">sale.channel,-1</field>
+            <field name="action" ref="act_sale_channel_listing"/>
+        </record>
+
+        <!-- Domai Tabs -->
+        <record model="ir.action.act_window.domain" id="act_sale_channel_listing_domain_active">
+            <field name="name">Active</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain">[('state', '=', 'active')]</field>
+            <field name="act_window" ref="act_sale_channel_listing"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_sale_channel_listing_domain_disabled">
+            <field name="name">Disabled</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain">[('state', '=', 'disabled')]</field>
+            <field name="act_window" ref="act_sale_channel_listing"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_sale_channel_listing_domain_all">
+            <field name="name">All</field>
+            <field name="sequence" eval="30"/>
+            <field name="act_window" ref="act_sale_channel_listing"/>
+        </record>
+
         <record model="ir.ui.view" id="listing_add_start_form">
             <field name="model">product.listing.add.start</field>
             <field name="type">form</field>
