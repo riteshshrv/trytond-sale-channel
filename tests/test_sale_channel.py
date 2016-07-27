@@ -877,6 +877,34 @@ class TestSaleChannel(BaseTestCase):
             # Exception error should not be raised after it is resolved
             self.Sale.confirm([sale])
 
+    def test_0120_check_channel_exception(self):
+        """
+        Check that duplication of sale does not duplicate its
+        exceptions (irrespective of being resolved or not)
+        """
+        Sale = POOL.get('sale.sale')
+        ChannelException = POOL.get('channel.exception')
+
+        with Transaction().start(DB_NAME, USER, context=CONTEXT):
+            self.setup_defaults()
+
+            sale = self.create_sale(1, self.channel1)
+
+            self.assertFalse(sale.has_channel_exception)
+
+            # create an exception manually for sake of test
+            channel_exception, = ChannelException.create([{
+                'origin': '%s,%s' % (sale.__name__, sale.id),
+                'log': 'Sale has some dummy exception',
+                'channel': sale.channel.id,
+            }])
+
+            self.assert_(channel_exception)
+            self.assertTrue(sale.has_channel_exception)
+
+            duplicate_sale, = Sale.copy([sale])
+            self.assertFalse(duplicate_sale.has_channel_exception)
+
 
 def suite():
     """

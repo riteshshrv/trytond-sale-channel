@@ -773,7 +773,7 @@ class ChannelException(ModelSQL, ModelView):
     channel = fields.Many2One(
         "sale.channel", "Channel", required=True, readonly=True
     )
-    is_resolved = fields.Boolean("Is Resolved ?", select=True, readonly=True)
+    is_resolved = fields.Boolean("Is Resolved ?", select=True)
 
     @classmethod
     def __setup__(cls):
