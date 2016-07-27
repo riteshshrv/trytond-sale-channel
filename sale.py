@@ -317,6 +317,7 @@ class Sale:
                 default['channel'] = cls.default_channel()
 
         default['channel_identifier'] = None
+        default['exceptions'] = None
 
         return super(Sale, cls).copy(sales, default=default)
 
