@@ -7,6 +7,8 @@
     <field name="product_identifier"/>
     <label name="product"/>
     <field name="product"/>
+    <label name="listing_url"/>
+    <field name="listing_url" widget="url"/>
     <notebook colspan="4">
     </notebook>
     <group colspan="4" id="button_state">

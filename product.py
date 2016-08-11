@@ -222,6 +222,9 @@ class ProductSaleChannelListing(ModelSQL, ModelView):
         }, depends=['availability_type_used']),
         'get_availability_fields'
     )
+    listing_url = fields.Function(
+        fields.Char('Listing URL'), 'get_listing_url'
+    )
 
     @classmethod
     def __register__(cls, module_name):
@@ -238,6 +241,13 @@ class ProductSaleChannelListing(ModelSQL, ModelView):
         if self.product:
             self.product.default_uom.digits
         return 2
+
+    def get_listing_url(self, name):
+        """
+        Downstream modules should implement this function
+        and return a valid url
+        """
+        return None
 
     @classmethod
     def get_availability_fields(cls, listings, names):
