@@ -4,5 +4,6 @@
     <field name="channel" />
     <field name="product_identifier" />
     <field name="state"/>
+    <field name="listing_url" widget="url"/>
     <button name="export_inventory_button" string="Export Inventory"/>
 </tree>
