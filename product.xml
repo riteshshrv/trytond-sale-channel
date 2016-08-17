@@ -21,7 +21,7 @@
         <record model="ir.action.act_window" id="act_sale_channel_listing">
             <field name="name">Channel Listing</field>
             <field name="res_model">product.product.channel_listing</field>
-            <field name="domain">[('channel', '=', Eval('active_id'))]</field>
+            <field name="domain" eval="[('channel', '=', Eval('active_id'))]" pyson="1"/>
         </record>
          <record model="ir.action.keyword" id="act_sale_channel_listing_keyword">
             <field name="keyword">form_relate</field>
@@ -43,13 +43,13 @@
         <record model="ir.action.act_window.domain" id="act_sale_channel_listing_domain_active">
             <field name="name">Active</field>
             <field name="sequence" eval="10"/>
-            <field name="domain">[('state', '=', 'active')]</field>
+            <field name="domain" eval="[('state', '=', 'active')]" pyson="1"/>
             <field name="act_window" ref="act_sale_channel_listing"/>
         </record>
         <record model="ir.action.act_window.domain" id="act_sale_channel_listing_domain_disabled">
             <field name="name">Disabled</field>
             <field name="sequence" eval="20"/>
-            <field name="domain">[('state', '=', 'disabled')]</field>
+            <field name="domain" eval="[('state', '=', 'disabled')]" pyson="1"/>
             <field name="act_window" ref="act_sale_channel_listing"/>
         </record>
         <record model="ir.action.act_window.domain" id="act_sale_channel_listing_domain_all">

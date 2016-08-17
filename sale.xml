@@ -3,19 +3,17 @@
     <data>
         <record model="ir.ui.view" id="sale_view_form">
             <field name="model">sale.sale</field>
-            <field name="type">form</field>
             <field name="inherit" ref="sale.sale_view_form"/>
             <field name="name">sale_form</field>
         </record>
         <record model="ir.ui.view" id="sale_view_tree">
             <field name="model">sale.sale</field>
-            <field name="type">tree</field>
             <field name="inherit" ref="sale.sale_view_tree"/>
             <field name="name">sale_tree</field>
         </record>
 
         <record model="ir.action.act_window" id="sale.act_sale_form">
-            <field name="search_value">[('channel', '=', Eval('context', {}).get('current_channel.rec_name', ''))]</field>
+            <field name="search_value" eval="[('channel', '=', Eval('context', {}).get('current_channel.rec_name', ''))]" pyson="1"/>
         </record>
 
         <record model="ir.rule.group" id="rule_group_sale">
@@ -28,7 +26,7 @@
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.rule" id="rule_sale1">
-            <field name="domain">[('channel', 'in', [c.id for c in user.allowed_read_channels])]</field>
+            <field name="domain" eval="[('channel', 'in', Eval('user', {}).get('allowed_read_channels', []))]" pyson="1"/>
             <field name="rule_group" ref="rule_group_sale"/>
         </record>
     </data>

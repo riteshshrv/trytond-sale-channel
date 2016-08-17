@@ -10,7 +10,7 @@ __all__ = [
 ]
 
 CARRIER_STATES = {
-    'readonly': (Eval('id', default=0) > 0)
+    'readonly': (Eval('id', 0) > 0)
 }
 CARRIER_DEPENDS = ['id']
 

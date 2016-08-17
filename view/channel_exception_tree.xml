@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<tree string="Channel Exceptions" colors="If(~Bool(Eval('is_resolved')), 'red', 'grey')">
+<tree string="Channel Exceptions">
     <field name="channel"/>
     <field name="origin"/>
     <field name="is_resolved"/>

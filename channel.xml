@@ -39,18 +39,18 @@
         <record model="ir.action.act_window" id="act_sale_channel_form">
             <field name="name">Channels</field>
             <field name="res_model">sale.channel</field>
-            <field name="context">{'active_test': False}</field>
+            <field name="context" eval="{'active_test': False}" pyson="1"/>
         </record>
         <record model="ir.action.act_window.domain" id="action_sale_channel_view_domain_active">
             <field name="name">Active</field>
             <field name="sequence" eval="10"/>
-            <field name="domain">[('active', '=', True)]</field>
+            <field name="domain" eval="[('active', '=', True)]" pyson="1"/>
             <field name="act_window" ref="act_sale_channel_form"/>
         </record>
         <record model="ir.action.act_window.domain" id="action_sale_channel_view_domain_disabled">
             <field name="name">Disabled</field>
             <field name="sequence" eval="10"/>
-            <field name="domain">[('active', '=', False)]</field>
+            <field name="domain" eval="[('active', '=', False)]" pyson="1"/>
             <field name="act_window" ref="act_sale_channel_form"/>
         </record>
         <record model="ir.action.act_window.view" id="act_sale_channel_form_view_1">
@@ -69,7 +69,7 @@
         <record model="ir.action.act_window" id="act_listed_product">
             <field name="name">Listed Products</field>
             <field name="res_model">product.product</field>
-            <field name="domain">[('channel_listings.channel', 'in', Eval('active_ids'))]</field>
+            <field name="domain" eval="[('channel_listings.channel', 'in', Eval('active_ids'))]" pyson="1"/>
         </record>
         <record model="ir.action.keyword"
                 id="act_open_sale_channel_keyword">
@@ -81,7 +81,7 @@
         <record model="ir.action.act_window" id="act_sale">
             <field name="name">Orders</field>
             <field name="res_model">sale.sale</field>
-            <field name="domain">[('channel', '=', Eval('active_id'))]</field>
+            <field name="domain" eval="[('channel', '=', Eval('active_id'))]" pyson="1"/>
         </record>
         <record model="ir.action.keyword" id="act_open_sale_keyword">
             <field name="keyword">form_relate</field>
@@ -111,6 +111,13 @@
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_channel_exception_non_sale_user">
+            <field name="model" search="[('model', '=', 'channel.exception')]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
             <field name="perm_delete" eval="False"/>
         </record>
 

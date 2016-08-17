@@ -4,7 +4,7 @@
 
 """
 from trytond.pool import PoolMeta
-from trytond.model import ModelView, fields, ModelSQL
+from trytond.model import ModelView, fields, ModelSQL, Unique
 
 __metaclass__ = PoolMeta
 __all__ = [
@@ -48,10 +48,9 @@ class PartySaleChannelListing(ModelSQL, ModelView):
         Setup the class and define constraints
         """
         super(PartySaleChannelListing, cls).__setup__()
-        cls._sql_constraints += [
-            (
-                'channel_party_unique',
-                'UNIQUE(channel, contact_identifier, party)',
-                'Contact is already mapped to this channel with same identifier'
-            )
-        ]
+        table = cls.__table__()
+        cls._sql_constraints += [(
+            'channel_party_unique',
+            Unique(table, table.channel, table.contact_identifier, table.party),
+            'Contact is already mapped to this channel with same identifier'
+        )]
