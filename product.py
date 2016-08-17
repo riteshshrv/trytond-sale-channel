@@ -18,8 +18,7 @@ from collections import defaultdict
 from trytond.pool import PoolMeta, Pool
 from trytond.wizard import Wizard, Button, StateTransition, StateView
 from trytond.transaction import Transaction
-from trytond import backend
-from trytond.model import ModelView, fields, ModelSQL
+from trytond.model import ModelView, fields, ModelSQL, Unique
 from trytond.pyson import Eval, Bool
 
 __metaclass__ = PoolMeta
@@ -125,13 +124,12 @@ class TemplateSaleChannelListing(ModelSQL, ModelView):
         Setup the class and define constraints
         """
         super(TemplateSaleChannelListing, cls).__setup__()
-        cls._sql_constraints += [
-            (
-                'channel_template_unique',
-                'UNIQUE(channel, template_identifier, template)',
-                'Product Template is already mapped to this channel with same identifier'  # noqa
-            )
-        ]
+        table = cls.__table__()
+        cls._sql_constraints += [(
+            'channel_template_unique',
+            Unique(table, table.channel, table.template_identifier, table.template),  # noqa
+            'Product Template is already mapped to this channel with same identifier'  # noqa
+        )]
 
 
 class Product:
@@ -226,17 +224,6 @@ class ProductSaleChannelListing(ModelSQL, ModelView):
         fields.Char('Listing URL'), 'get_listing_url'
     )
 
-    @classmethod
-    def __register__(cls, module_name):
-        super(ProductSaleChannelListing, cls).__register__(module_name)
-
-        TableHandler = backend.get('TableHandler')
-        cursor = Transaction().cursor
-        table = TableHandler(cursor, cls, module_name)
-
-        # Remove not null constraint from 'product'
-        table.not_null_action('product', action='remove')
-
     def get_unit_digits(self, name):
         if self.product:
             self.product.default_uom.digits
@@ -279,10 +266,11 @@ class ProductSaleChannelListing(ModelSQL, ModelView):
         Setup the class and define constraints
         '''
         super(ProductSaleChannelListing, cls).__setup__()
+        table = cls.__table__()
         cls._sql_constraints += [
             (
                 'channel_product_identifier_uniq',
-                'UNIQUE(channel, product_identifier)',
+                Unique(table, table.channel, table.product_identifier),
                 'This external product is already mapped with same channel.'
             )
         ]

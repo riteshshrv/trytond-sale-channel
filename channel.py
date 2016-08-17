@@ -8,7 +8,7 @@ from datetime import datetime
 from trytond.pool import PoolMeta, Pool
 from trytond.transaction import Transaction
 from trytond.pyson import Eval, Bool
-from trytond.model import ModelView, fields, ModelSQL
+from trytond.model import ModelView, fields, ModelSQL, Unique
 from dateutil.relativedelta import relativedelta
 from trytond.modules.company.company import TIMEZONES
 
@@ -175,6 +175,25 @@ class SaleChannel(ModelSQL, ModelView):
         or not
         """
         return False
+
+    @classmethod
+    def view_attributes(cls):
+        return super(SaleChannel, cls).view_attributes() + [
+            ('//page[@id="configuration"]', 'states', {
+                    'invisible': Eval('source') == 'manual',
+                    }),
+            ('//page[@id="last_import_export_time"]', 'states', {
+                    'invisible': Eval('source') == 'manual',
+                    }),
+            ('//page[@id="product_defaults"]', 'states', {
+                    'invisible': Eval('source') == 'manual',
+                    }),
+            ('//page[@id="order_states"]', 'states', {
+                    'invisible': Eval('source') == 'manual',
+                    }),
+            ('//page[@id="import_export_buttons"]', 'states', {
+                    'invisible': Eval('source') == 'manual',
+                    })]
 
     @classmethod
     def __setup__(cls):
@@ -387,7 +406,7 @@ class SaleChannel(ModelSQL, ModelView):
         :return: List of AR of `product.product.channel_listing`
         """
         ChannelListing = Pool().get('product.product.channel_listing')
-        cursor = Transaction().cursor
+        cursor = Transaction().connection.cursor()
 
         if not self.last_inventory_export_time:
             # Return all active listings
@@ -435,11 +454,11 @@ class SaleChannel(ModelSQL, ModelView):
         # XXX: Exporting inventory to external channel is an expensive.
         # To avoid lock on sale_channel table save record after
         # exporting all inventory
-        with Transaction().new_cursor() as txn:
+        with Transaction().new_transaction() as txn:
             channel = Channel(channel_id)
             channel.last_inventory_export_time = last_inventory_export_time
             channel.save()
-            txn.cursor.commit()
+            txn.commit()
 
     @classmethod
     def export_inventory_from_cron(cls):  # pragma: nocover
@@ -872,11 +891,13 @@ class TaxMapping(ModelSQL, ModelView):
     def __setup__(cls):
         super(TaxMapping, cls).__setup__()
 
+        table = cls.__table__()
         cls._error_messages.update({
             'unique_tax_rate_per_channel':
             "Tax rate and name must be unique per channel"
         })
         cls._sql_constraints += [
-            ('unique_tax_percent', 'UNIQUE(channel, name, rate)',
+            ('unique_tax_percent',
+             Unique(table, table.channel, table.name, table.rate),
              'unique_tax_rate_per_channel')
         ]

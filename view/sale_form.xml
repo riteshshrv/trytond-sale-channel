@@ -7,7 +7,7 @@
         <field name="channel" widget="selection"/>
     </xpath>
     <xpath expr="//notebook" position="inside">
-        <page name="exceptions" states="{'invisible': Eval('channel_type') == 'manual'}">
+        <page name="exceptions">
             <field name="exceptions"/>
         </page>
     </xpath>
