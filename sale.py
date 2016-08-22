@@ -341,9 +341,10 @@ class Sale:
 
         data = self.channel.get_tryton_action(channel_state)
 
-        self.invoice_method = data['invoice_method']
-        self.shipment_method = data['shipment_method']
-        self.save()
+        if self.state == 'draft':
+            self.invoice_method = data['invoice_method']
+            self.shipment_method = data['shipment_method']
+            self.save()
 
         if data['action'] in ['process_manually', 'process_automatically']:
             if self.state == 'draft':
@@ -360,7 +361,7 @@ class Sale:
                 if shipment.state == 'waiting':
                     Shipment.assign_try([shipment])
 
-        if data['action'] == 'import_as_past':
+        if data['action'] == 'import_as_past' and self.state == 'draft':
             # XXX: mark past orders as completed
             self.state = 'done'
             self.save()
