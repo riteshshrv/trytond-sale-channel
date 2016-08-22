@@ -337,10 +337,13 @@ class Sale:
         self.save()
 
         if data['action'] in ['process_manually', 'process_automatically']:
-            Sale.quote([self])
-            Sale.confirm([self])
+            if self.state == 'draft':
+                Sale.quote([self])
+            if self.state == 'quotation':
+                Sale.confirm([self])
 
-        if data['action'] == 'process_automatically':
+        if data['action'] == 'process_automatically' and \
+                self.state == 'confirmed':
             Sale.process([self])
             for shipment in self.shipments:
                 if shipment.state == 'draft':
