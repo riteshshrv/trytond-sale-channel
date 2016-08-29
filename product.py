@@ -141,6 +141,11 @@ class Product:
     channel_listings = fields.One2Many(
         'product.product.channel_listing', 'product', 'Channel Listings',
     )
+    is_fresh_import = fields.Boolean('Is Fresh Import?')
+
+    @staticmethod
+    def get_is_fresh_import():
+        return False
 
     @classmethod
     def __setup__(cls):
@@ -163,6 +168,17 @@ class Product:
             "create_from is not implemented in product for %s channels"
             % channel.source
         )
+
+    @classmethod
+    def write(cls, products, values, *args):
+        """
+        Set 'is_fresh_import' to False when product is updated
+        """
+        for product in products:
+            if product.is_fresh_import:
+                values['is_fresh_import'] = False
+
+        return super(Product, cls).write(products, values, *args)
 
 
 class ProductSaleChannelListing(ModelSQL, ModelView):

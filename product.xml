@@ -39,7 +39,7 @@
             <field name="act_window" ref="act_sale_channel_listing"/>
         </record>
 
-        <!-- Domai Tabs -->
+        <!-- Domain Tabs -->
         <record model="ir.action.act_window.domain" id="act_sale_channel_listing_domain_active">
             <field name="name">Active</field>
             <field name="sequence" eval="10"/>
@@ -56,6 +56,14 @@
             <field name="name">All</field>
             <field name="sequence" eval="30"/>
             <field name="act_window" ref="act_sale_channel_listing"/>
+        </record>
+
+        <!-- Domain Tab for Products -->
+        <record model="ir.action.act_window.domain" id="act_product_fresh_import">
+            <field name="name">Fresh Import</field>
+            <field name="sequence" eval="30"/>
+            <field name="domain">[('is_fresh_import', '=', True)]</field>
+            <field name="act_window" ref="product.act_product_form"/>
         </record>
 
         <record model="ir.ui.view" id="listing_add_start_form">
