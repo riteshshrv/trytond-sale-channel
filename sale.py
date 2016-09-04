@@ -219,7 +219,7 @@ class Sale:
     @fields.depends('channel', 'party')
     def on_change_channel(self):
         if not self.channel:
-            return {}  # pragma: nocover
+            return
         for fname in ('company', 'warehouse', 'currency', 'payment_term'):
             fvalue = getattr(self.channel, fname)
             if fvalue:
