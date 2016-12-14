@@ -6,7 +6,7 @@
 from trytond.pool import Pool
 from channel import (
     SaleChannel, ReadUser, WriteUser, ChannelException, ChannelOrderState,
-    TaxMapping
+    TaxMapping, ChannelPaymentGateway
 )
 from wizard import (
     ImportDataWizard, ImportDataWizardStart, ImportDataWizardSuccess,
@@ -51,6 +51,7 @@ def register():
         ExportPricesStatus,
         ExportPricesStart,
         AddProductListingStart,
+        ChannelPaymentGateway,
         module='sale_channel', type_='model'
     )
     Pool.register(

@@ -15,7 +15,7 @@ from trytond.modules.company.company import TIMEZONES
 __metaclass__ = PoolMeta
 __all__ = [
     'SaleChannel', 'ReadUser', 'WriteUser', 'ChannelException',
-    'ChannelOrderState', 'TaxMapping'
+    'ChannelOrderState', 'TaxMapping', 'ChannelPaymentGateway'
 ]
 
 STATES = {
@@ -152,6 +152,10 @@ class SaleChannel(ModelSQL, ModelView):
     last_inventory_export_time = fields.DateTime(
         'Last Inventory Export Time', states=INVISIBLE_IF_MANUAL,
         depends=['source']
+    )
+
+    payment_gateways = fields.One2Many(
+        'sale.channel.payment_gateway', 'channel', 'Payment Gateways'
     )
 
     timezone = fields.Selection(
@@ -901,3 +905,49 @@ class TaxMapping(ModelSQL, ModelView):
              Unique(table, table.channel, table.name, table.rate),
              'unique_tax_rate_per_channel')
         ]
+
+
+class ChannelPaymentGateway(ModelSQL, ModelView):
+    """
+    Sale Channel Payment Gateway
+    """
+    __name__ = 'sale.channel.payment_gateway'
+
+    code = fields.Char("Code", required=True, select=True)
+    name = fields.Char('Name', required=True)
+    gateway = fields.Many2One(
+        'payment_gateway.gateway', 'Gateway', required=True,
+        ondelete='RESTRICT', select=True,
+    )
+    channel = fields.Many2One(
+        'sale.channel', 'Channel', readonly=True, select=True,
+    )
+
+    @classmethod
+    def __setup__(cls):
+        """
+        Setup the class before adding to pool
+        """
+        super(ChannelPaymentGateway, cls).__setup__()
+        cls._sql_constraints += [
+            (
+                'code_channel_unique', 'unique(code, channel)',
+                'Payment gateway already exists for this channel'
+            )
+        ]
+
+    @classmethod
+    def find_gateway_using_channel_data(cls, channel, gateway_data):
+        """
+        Search for an existing gateway by matching code and channel.
+        If found, return its active record else None
+        """
+        try:
+            gateway, = cls.search([
+                ('code', '=', gateway_data['code']),
+                ('channel', '=', channel.id),
+            ])
+        except ValueError:
+            return None
+        else:
+            return gateway

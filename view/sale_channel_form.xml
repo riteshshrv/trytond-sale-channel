@@ -38,7 +38,7 @@
                     <field name="last_product_export_time"/>
                     <label name="last_inventory_export_time"/>
                     <field name="last_inventory_export_time"/>
-                </page>                
+                </page>
             </notebook>
         </page>
         <page string="Shipping Carriers" id="shipping_carriers">
@@ -60,6 +60,9 @@
             <field name="currency" widget="selection"/>
             <label name="price_list"/>
             <field name="price_list"/>
+        </page>
+        <page string="Payment Gateways" id="payment_gateways">
+            <field name="payment_gateways" colspan="4"/>
         </page>
         <page string="Product Defaults" id="product_defaults">
             <label string="These values would be needed at the time of creating products, imported from the external channel." id="product_message"

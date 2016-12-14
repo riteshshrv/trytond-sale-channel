@@ -411,3 +411,18 @@ class SaleLine:
             self.raise_user_error(
                 'duplicate_order_line', (self.channel_identifier,)
             )
+
+    def create_payment_from(self, payment_data):
+        """
+        Create sale payment using given data.
+
+        Since external channels are implemented by downstream modules, it is
+        the responsibility of those channels to reuse this method.
+
+        :param payment_data: Dictionary which must have at least one key-value
+                                pair for 'code'
+        """
+        raise NotImplementedError(
+            "This feature has not been implemented for %s channel yet."
+            % self.source
+        )

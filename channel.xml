@@ -229,5 +229,17 @@
             <field name="name">sale_tax_tree</field>
         </record>
 
+        <!-- Channel Payment Gateway -->
+        <record model="ir.ui.view" id="channle_payment_gateway_view_form">
+            <field name="model">sale.channel.payment_gateway</field>
+            <field name="type">form</field>
+            <field name="name">channel_payment_gateway_form</field>
+        </record>
+        <record model="ir.ui.view" id="channle_payment_gateway_view_tree">
+            <field name="model">sale.channel.payment_gateway</field>
+            <field name="type">tree</field>
+            <field name="name">channel_payment_gateway_tree</field>
+        </record>
+
     </data>
 </tryton>
