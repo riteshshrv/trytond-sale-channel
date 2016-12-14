@@ -86,6 +86,7 @@ requires = [
 
 MODULE2PREFIX = {
     'product_notebook': 'fio',
+    'sale_payment_gateway': 'fio',
 }
 
 MODULE = "sale_channel"

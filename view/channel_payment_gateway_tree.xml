@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tree string="Channel Payment Gateway">
+    <field name="name"/>
+    <field name="code"/>
+    <field name="gateway"/>
+</tree>
