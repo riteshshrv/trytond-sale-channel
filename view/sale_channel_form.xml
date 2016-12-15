@@ -80,10 +80,10 @@
             <field name="order_states" colspan="6"/>
         </page>
         <page string="Taxes" id="taxes">
-            <label name="invoice_account"/>
-            <field name="invoice_account"/>
-            <label name="credit_note_account"/>
-            <field name="credit_note_account"/>
+            <label name="invoice_tax_account"/>
+            <field name="invoice_tax_account"/>
+            <label name="credit_note_tax_account"/>
+            <field name="credit_note_tax_account"/>
             <field name="taxes" colspan="4"/>
         </page>
     </notebook>
