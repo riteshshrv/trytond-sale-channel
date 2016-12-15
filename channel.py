@@ -165,6 +165,21 @@ class SaleChannel(ModelSQL, ModelView):
     # This field is to set according to sequence
     sequence = fields.Integer('Sequence', select=True)
 
+    invoice_account = fields.Many2One(
+        'account.account', 'Invoice Account',
+        domain=[
+            ('company', '=', Eval('company')),
+            ('kind', 'not in', ['view', 'receivable', 'payable']),
+        ], depends=['company']
+    )
+    credit_note_account = fields.Many2One(
+        'account.account', 'Credit Note Account',
+        domain=[
+            ('company', '=', Eval('company')),
+            ('kind', 'not in', ['view', 'receivable', 'payable']),
+        ], depends=['company']
+    )
+
     @staticmethod
     def default_timezone():
         return 'UTC'
@@ -727,7 +742,7 @@ class SaleChannel(ModelSQL, ModelView):
             % self.source
         )
 
-    def get_tax(self, name, rate):
+    def get_tax(self, name, rate, silent=False):
         """
         Search for an existing Tax record by matching name and rate.
         If found return its active record else raise user error.
@@ -746,6 +761,8 @@ class SaleChannel(ModelSQL, ModelView):
         try:
             mapped_tax, = TaxMapping.search(domain)
         except ValueError:
+            if silent:
+                return None
             self.raise_user_error(
                 'no_tax_found', error_args=(name, rate)
             )
