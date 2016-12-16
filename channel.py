@@ -165,19 +165,21 @@ class SaleChannel(ModelSQL, ModelView):
     # This field is to set according to sequence
     sequence = fields.Integer('Sequence', select=True)
 
-    invoice_account = fields.Many2One(
-        'account.account', 'Invoice Account',
+    invoice_tax_account = fields.Many2One(
+        'account.account', 'Invoice Tax Account',
         domain=[
             ('company', '=', Eval('company')),
             ('kind', 'not in', ['view', 'receivable', 'payable']),
-        ], depends=['company']
+        ], depends=['company'],
+        help="GL to book for taxes when new taxes are created from channel",
     )
-    credit_note_account = fields.Many2One(
-        'account.account', 'Credit Note Account',
+    credit_note_tax_account = fields.Many2One(
+        'account.account', 'Credit Note Tax Account',
         domain=[
             ('company', '=', Eval('company')),
             ('kind', 'not in', ['view', 'receivable', 'payable']),
-        ], depends=['company']
+        ], depends=['company'],
+        help="GL to book for taxes when new taxes are created from channel",
     )
 
     @staticmethod
