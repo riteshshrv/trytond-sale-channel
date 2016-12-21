@@ -326,6 +326,28 @@ class SaleChannel(ModelSQL, ModelView):
         else:
             return carrier.carrier
 
+    def get_shipping_carrier_service(self, code, silent=False):
+        """
+        Search for an existing carrier service by matching code and channel.
+        If found, return its active record else raise_user_error.
+        """
+        SaleCarrierChannel = Pool().get('sale.channel.carrier')
+
+        try:
+            carrier, = SaleCarrierChannel.search([
+                ('code', '=', code),
+                ('channel', '=', self.id),
+            ])
+        except ValueError:
+            if silent:
+                return None
+            self.raise_user_error(
+                'no_carriers_found',
+                error_args=code
+            )
+        else:
+            return carrier.carrier_service
+
     def get_order_states_to_import(self):
         """
         Return list of `sale.channel.order_state` to import orders
