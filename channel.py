@@ -592,6 +592,29 @@ class SaleChannel(ModelSQL, ModelView):
         """
         return self.import_product(identifier, product_data)
 
+    def import_product_images(self):
+        """
+        Helper method for importing product images from external channel
+        after products are imported.
+
+        Since external channels are implemented by downstream modules, it is
+        the responsibility of those channels to implement importing or call
+        super to delegate.
+        """
+        ProductListing = Pool().get('product.product.channel_listing')
+
+        product_listings = ProductListing.search([
+            ('channel', '=', self.id),
+            ('state', '=', 'active'),
+        ])
+        if not product_listings:
+            self.raise_user_error(
+                'There are no active listings to import images for'
+            )
+
+        for listing in product_listings:
+            listing.import_product_image()
+
     @classmethod
     @ModelView.button_action('sale_channel.wizard_import_data')
     def import_data_button(cls, channels):

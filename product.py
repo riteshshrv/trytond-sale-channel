@@ -324,6 +324,20 @@ class ProductSaleChannelListing(ModelSQL, ModelView):
         for listing in listings:
             listing.export_inventory()
 
+    def import_product_image(self):
+        """
+        Import specific product image from external channel based on product
+        identifier.
+
+        Since external channels are implemented by downstream modules, it is
+        the responsibility of those channels to implement importing or call
+        super to delegate.
+        """
+        raise NotImplementedError(
+            "Method import_product_image is not implemented for %s channel yet"
+            % self.source
+        )
+
     def get_availability_context(self):
         """
         Allow overriding the context used to compute availability of

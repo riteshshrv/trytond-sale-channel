@@ -193,6 +193,10 @@ class ImportDataWizardStart(ModelView):
         ('all', 'All'),
         ('specific_product', 'Specific Product'),
     ], "Import Products")
+    import_product_images = fields.Boolean(
+        "Import Product Images",
+        help="Selecting this option will import images for all listed products"
+    )
     product_identifier = fields.Char(
         "Product Identifier", states={
             'required': Eval('import_products') == 'specific_product',
@@ -393,6 +397,9 @@ class ImportDataWizard(Wizard):
 
         if self.start.import_products == 'specific_product':
             products = channel.import_product(self.start.product_identifier)
+
+        if self.start.import_product_images:
+            channel.import_product_images()
 
         if products and isinstance(products, list):
             message += 'Number of Products Imported : %d \n\n' % len(products)
